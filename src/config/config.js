@@ -4,7 +4,7 @@ import ConnectMongoDBSession  from "connect-mongodb-session";
 import { admin } from "../models/user.js";
 
 export const PORT = process.env.PORT || 3000; 
-export const COOKIE_PASSWORD=process.env.COOKIE_PASSWORD 
+export const COOKIE_PASSWORD=process.env.COOKIE_Password
 const MongoStore = ConnectMongoDBSession(fastifySession); 
 export const sessionStore  = new MongoStore({
     uri: process.env.MONGO_URI,
