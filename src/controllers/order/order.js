@@ -154,21 +154,10 @@ export const confirmOder = async(req, reply)=>{
             longitude:deliveryPersonLocation.longitude, 
             address:deliveryPersonLocation.address || ""
         }
-        req.server.io.to(orderId).emit("OrderConfirmed", order); 
         await order.save();
-        await deliveryPartner.updateOne(
-            {_id:deliveryPartner},
-            {
-                $set:{
-                    livelocation:{
-                       
-                            latitude: deliveryPersonLocation.latitude,
-                            longitude: deliveryPersonLocation.longitude,
-                    }
-                }
-            }
-            
-        )
+        req.server.io.to(orderId).emit("OrderConfirmed", order); 
+       
+       
         return reply.status(200).send(order);
     } catch (error) {
         console.log(error);
@@ -200,19 +189,7 @@ export const uodateOrderStatus =async(req, reply) => {
         order.status = status; 
         order.deliveryPersonLocation = deliveryPersonLocation; 
         await order.save(); 
-        await deliveryPartner.updateOne(
-            {_id:deliveryPartner},
-            {
-                $set:{
-                    livelocation:{
-                       
-                            latitude: deliveryPersonLocation.latitude,
-                            longitude: deliveryPersonLocation.longitude,
-                    }
-                }
-            }
-            
-        )
+       
         req.server.io.to(orderId).emit("liveTrackingUpdates",order); 
         return reply.status(200).send(order);
 
