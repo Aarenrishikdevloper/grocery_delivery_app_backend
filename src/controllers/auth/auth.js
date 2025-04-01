@@ -1,7 +1,7 @@
 
 import {Customer, deliveryPartner} from "../../models/user.js"  
 import jwt from 'jsonwebtoken'; 
-import { sentotp, verifyOtp } from "../../config/twilio.js";
+import { sentotp, verifyOtp } from "../../config/phoneverification.js";
 
 const generateToken =(user)=>{
     const acessToken = jwt.sign(
@@ -20,7 +20,7 @@ const generateToken =(user)=>{
 export const registerPhonenUmber =async(req, reply)=>{ 
     try {
         const {phone} = req.body; 
-        const phone_no = `+91${phone}`
+        const phone_no = `91${phone}`
         await sentotp(phone_no); 
        return reply.status(200).send({message:"Code Sent Sucessfully"})
     } catch (error) {
@@ -32,10 +32,10 @@ export const registerPhonenUmber =async(req, reply)=>{
 export const loginCustomer =async(req, reply)=>{
     try {
         const {phone, otp} = req.body;  
-        const phone_otp = `+91${phone}`
+        const phone_otp = `91${phone}`
         const verify = await verifyOtp(phone_otp, otp)
         let customer = await Customer.findOne({phone})  
-        if(verify){
+        if(verify.valid){
         if(!customer){
             customer = new Customer({
                  phone: phone, 
